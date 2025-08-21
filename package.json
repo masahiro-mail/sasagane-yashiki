@@ -1,0 +1,18 @@
+{
+  "name": "sasagane-yashiki",
+  "version": "1.0.0",
+  "description": "ささがね屋敷 - 蜘蛛の妖艶忍者が住まう神秘の館",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 3000",
+    "build": "echo 'Static site - no build required'"
+  },
+  "keywords": ["sasagane", "ninja", "cnp", "webapp"],
+  "author": "図解師★ウルフ",
+  "license": "MIT",
+  "homepage": "https://github.com/masahiro-mail/sasagane-yashiki#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/masahiro-mail/sasagane-yashiki.git"
+  }
+}
