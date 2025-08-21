@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ささがね計算ゲーム</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&family=Zen+Old+Mincho:wght@400;600;700&display=swap');
+        .japanese-font {
+            font-family: 'Shippori Mincho', 'Zen Old Mincho', serif;
+        }
+        .calculation-input {
+            font-size: 1.5rem;
+            text-align: center;
+            border: 2px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .calculation-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+        .problem-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="japanese-font">
+    <div id="app"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function SasaganeCalculationGame() {
+            const [gameState, setGameState] = useState('waiting');
+            const [currentProblem, setCurrentProblem] = useState(null);
+            const [userAnswer, setUserAnswer] = useState('');
+            const [correctCount, setCorrectCount] = useState(0);
+            const [mistakeCount, setMistakeCount] = useState(0);
+            const [showResult, setShowResult] = useState(null);
+
+            const generateProblem = () => {
+                const operator = Math.random() > 0.5 ? '+' : '-';
+                let num1, num2, answer;
+                
+                if (operator === '+') {
+                    num1 = Math.floor(Math.random() * 50) + 1;
+                    num2 = Math.floor(Math.random() * 50) + 1;
+                    answer = num1 + num2;
+                } else {
+                    num1 = Math.floor(Math.random() * 50) + 20;
+                    num2 = Math.floor(Math.random() * num1) + 1;
+                    answer = num1 - num2;
+                }
+                
+                return { num1, num2, operator, answer };
+            };
+
+            const startGame = () => {
+                setGameState('playing');
+                setCorrectCount(0);
+                setMistakeCount(0);
+                setUserAnswer('');
+                setShowResult(null);
+                loadNextProblem();
+            };
+
+            const loadNextProblem = () => {
+                const problem = generateProblem();
+                setCurrentProblem(problem);
+                setUserAnswer('');
+                setShowResult(null);
+            };
+
+            const handleSubmit = (answer) => {
+                const finalAnswer = answer || userAnswer;
+                if (!currentProblem || !finalAnswer) return;
+                
+                const isCorrect = parseInt(finalAnswer) === currentProblem.answer;
+                setShowResult(isCorrect ? 'correct' : 'wrong');
+                
+                if (isCorrect) {
+                    const newCorrectCount = correctCount + 1;
+                    setCorrectCount(newCorrectCount);
+                    
+                    if (newCorrectCount >= 35) {
+                        setTimeout(() => setGameState('result'), 1000);
+                        return;
+                    }
+                } else {
+                    const newMistakeCount = mistakeCount + 1;
+                    setMistakeCount(newMistakeCount);
+                }
+                
+                setTimeout(() => {
+                    loadNextProblem();
+                }, 1000);
+            };
+
+            const resetGame = () => {
+                setGameState('waiting');
+                setCurrentProblem(null);
+                setUserAnswer('');
+                setCorrectCount(0);
+                setMistakeCount(0);
+                setShowResult(null);
+            };
+
+            if (gameState === 'waiting') {
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-green-100 flex flex-col items-center justify-center p-4">
+                        <h1 className="text-4xl font-bold text-blue-800 mb-8 japanese-font">開運！ささがねの計算術</h1>
+                        
+                        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full mb-8 text-center">
+                            <div className="text-6xl mb-6">🐍</div>
+                            <p className="text-lg font-bold text-blue-600 mb-6 japanese-font">計算の極意</p>
+                            <p className="text-sm text-gray-600 mb-6 japanese-font">
+                                足し算・引き算の問題を解くべし！<br />
+                                35連続正解でささがねの運力を手に入れよう！<br />
+                                時間制限なし・回数制限なし
+                            </p>
+                        </div>
+                        
+                        <button
+                            onClick={startGame}
+                            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-lg text-xl japanese-font"
+                        >
+                            ゲームを始めん
+                        </button>
+                    </div>
+                );
+            }
+
+            if (gameState === 'playing') {
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-green-100 flex flex-col items-center justify-center p-4">
+                        <h1 className="text-4xl font-bold text-blue-800 mb-8 japanese-font">開運！ささがねの計算術</h1>
+                        
+                        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+                            <div className="text-center mb-6">
+                                <div className="flex justify-between items-center mb-4">
+                                    <div className="text-lg font-bold text-green-600 japanese-font">
+                                        正解: {correctCount}/35
+                                    </div>
+                                    <div className="text-lg font-bold text-gray-700 japanese-font">
+                                        ミス: {mistakeCount}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {currentProblem && (
+                                <div className="text-center mb-6">
+                                    <div className="problem-display">
+                                        {currentProblem.num1} {currentProblem.operator} {currentProblem.num2} = ?
+                                    </div>
+                                    
+                                    <input
+                                        type="number"
+                                        value={userAnswer}
+                                        onChange={(e) => setUserAnswer(e.target.value)}
+                                        onKeyPress={(e) => {
+                                            if (e.key === 'Enter') {
+                                                handleSubmit();
+                                            }
+                                        }}
+                                        disabled={showResult !== null}
+                                        className="calculation-input w-32 mb-4"
+                                        placeholder="答え"
+                                        autoFocus
+                                    />
+                                    
+                                    <button
+                                        onClick={() => handleSubmit()}
+                                        disabled={!userAnswer || showResult !== null}
+                                        className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white font-bold py-3 px-6 rounded-lg japanese-font"
+                                    >
+                                        答える
+                                    </button>
+                                </div>
+                            )}
+
+                            {showResult && (
+                                <div className="text-center">
+                                    <p className={`text-2xl font-bold ${showResult === 'correct' ? 'text-green-600' : 'text-red-600'} japanese-font`}>
+                                        {showResult === 'correct' ? '正解！' : `不正解... 答え: ${currentProblem?.answer}`}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                );
+            }
+
+            if (gameState === 'result') {
+                const isWin = correctCount >= 35;
+                
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-green-100 flex flex-col items-center justify-center p-4">
+                        <h1 className="text-4xl font-bold text-blue-800 mb-8 japanese-font">開運！ささがねの計算術</h1>
+                        
+                        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+                            <div className="text-6xl mb-6">
+                                {isWin ? '🎉' : '😅'}
+                            </div>
+                            
+                            <h2 className="text-2xl font-bold mb-4 japanese-font">
+                                {isWin ? 'ささがねの運力を手に入れたり！' : 'ゲーム終了'}
+                            </h2>
+                            
+                            <p className="text-lg mb-4 japanese-font">
+                                正解数: {correctCount}/35<br />
+                                ミス数: {mistakeCount}
+                            </p>
+
+                            <div className="mb-6">
+                                <p className="text-sm text-gray-600 japanese-font">
+                                    {isWin 
+                                        ? '35連続正解達成！素晴らしき計算力なり！' 
+                                        : `ミスが多くなってしまったり`
+                                    }
+                                </p>
+                            </div>
+
+                            <button
+                                onClick={resetGame}
+                                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg japanese-font"
+                            >
+                                再び挑戦せん
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            return null;
+        }
+
+        ReactDOM.render(<SasaganeCalculationGame />, document.getElementById('app'));
+    </script>
+</body>
+</html>

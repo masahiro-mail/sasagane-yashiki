@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ささがね記憶ゲーム</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&family=Zen+Old+Mincho:wght@400;600;700&display=swap');
+        .japanese-font {
+            font-family: 'Shippori Mincho', 'Zen Old Mincho', serif;
+        }
+        .ninja-button {
+            transition: all 0.3s ease;
+        }
+        .ninja-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        .ninja-pulse {
+            animation: pulse 0.8s ease-in-out;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="japanese-font">
+    <div id="app"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const ninjaCharacters = [
+            { emoji: '🐍', name: 'ささがね', color: 'bg-purple-400' },
+            { emoji: '⭐', name: 'さくや', color: 'bg-yellow-400' },
+            { emoji: '🌸', name: 'べんてん', color: 'bg-pink-400' },
+            { emoji: '⚡', name: 'いずな', color: 'bg-blue-400' },
+            { emoji: '💎', name: 'こはく', color: 'bg-green-400' },
+            { emoji: '🌙', name: 'こんが', color: 'bg-indigo-400' },
+            { emoji: '🔮', name: 'ねむ', color: 'bg-teal-400' },
+            { emoji: '✨', name: 'せおり', color: 'bg-orange-400' },
+            { emoji: '🌊', name: 'さっとば', color: 'bg-cyan-400' },
+            { emoji: '🏮', name: 'しゃおらん', color: 'bg-red-400' }
+        ];
+
+        function SasaganeMemoryGame() {
+            const [gameState, setGameState] = useState('waiting');
+            const [sequence, setSequence] = useState([]);
+            const [playerSequence, setPlayerSequence] = useState([]);
+            const [currentStep, setCurrentStep] = useState(0);
+            const [failures, setFailures] = useState(0);
+            const [showingIndex, setShowingIndex] = useState(-1);
+            const [success, setSuccess] = useState(false);
+
+            const generateSequence = () => {
+                const newSequence = [];
+                for (let i = 0; i < 10; i++) {
+                    newSequence.push(Math.floor(Math.random() * 10));
+                }
+                return newSequence;
+            };
+
+            const startGame = () => {
+                const newSequence = generateSequence();
+                setSequence(newSequence);
+                setPlayerSequence([]);
+                setCurrentStep(0);
+                setShowingIndex(0);
+                setGameState('showing');
+                setSuccess(false);
+            };
+
+            const showSequence = () => {
+                if (showingIndex < sequence.length) {
+                    setTimeout(() => {
+                        setShowingIndex(prev => prev + 1);
+                    }, 800);
+                } else {
+                    setTimeout(() => {
+                        setShowingIndex(-1);
+                        setGameState('input');
+                    }, 500);
+                }
+            };
+
+            const handleNinjaClick = (index) => {
+                if (gameState !== 'input') return;
+
+                const newPlayerSequence = [...playerSequence, index];
+                setPlayerSequence(newPlayerSequence);
+
+                if (newPlayerSequence[currentStep] === sequence[currentStep]) {
+                    if (currentStep === sequence.length - 1) {
+                        setSuccess(true);
+                        setGameState('result');
+                    } else {
+                        setCurrentStep(prev => prev + 1);
+                    }
+                } else {
+                    const newFailures = failures + 1;
+                    setFailures(newFailures);
+                    setGameState('result');
+                }
+            };
+
+            const resetGame = () => {
+                setGameState('waiting');
+                setSequence([]);
+                setPlayerSequence([]);
+                setCurrentStep(0);
+                setShowingIndex(-1);
+                setSuccess(false);
+                if (success) {
+                    setFailures(0);
+                }
+            };
+
+            useEffect(() => {
+                if (gameState === 'showing') {
+                    showSequence();
+                }
+            }, [gameState, showingIndex]);
+
+            if (gameState === 'waiting') {
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-purple-100 flex flex-col items-center justify-center p-4">
+                        <h1 className="text-4xl font-bold text-blue-800 mb-8 japanese-font">開運！ささがね記憶試練</h1>
+                        
+                        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full mb-8 text-center">
+                            <div className="text-6xl mb-6">🧠</div>
+                            <p className="text-lg font-bold text-blue-600 mb-6 japanese-font">記憶力の極み</p>
+                            <p className="text-sm text-gray-600 mb-6 japanese-font">
+                                10体の忍者が光る順序を記憶し、<br />
+                                正確に同じ順序で再現すべし！<br />
+                                1回成功にてゲーム制覇<br />
+                                回数制限・時間制限なし
+                            </p>
+                            <div className="text-sm text-gray-500 mb-4 japanese-font">
+                                失敗回数: {failures}
+                            </div>
+                        </div>
+                        
+                        <button
+                            onClick={startGame}
+                            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-lg text-xl japanese-font"
+                        >
+                            ゲームを始めん
+                        </button>
+                    </div>
+                );
+            }
+
+            if (gameState === 'showing') {
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-purple-100 flex flex-col items-center justify-center p-4">
+                        <h1 className="text-4xl font-bold text-blue-800 mb-8 japanese-font">開運！ささがね記憶試練</h1>
+                        
+                        <div className="bg-white rounded-lg shadow-lg p-8 max-w-lg w-full">
+                            <div className="text-center mb-6">
+                                <h2 className="text-2xl font-bold text-blue-600 mb-2 japanese-font">
+                                    順序を記憶せよ
+                                </h2>
+                                <p className="text-sm text-gray-500">
+                                    {showingIndex}/{sequence.length}
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-5 gap-3 mb-6">
+                                {ninjaCharacters.map((ninja, index) => (
+                                    <div
+                                        key={index}
+                                        className={`w-16 h-16 rounded-lg border-2 border-gray-300 flex flex-col items-center justify-center transition-all duration-300 
+                                            ${showingIndex > index ? `${ninja.color} border-gray-800 shadow-lg ninja-pulse` : 'bg-gray-200'}`}
+                                    >
+                                        <div className="text-lg">{ninja.emoji}</div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="text-center">
+                                <p className="text-lg text-gray-600 japanese-font">
+                                    よく見て順序を覚えよ...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (gameState === 'input') {
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-purple-100 flex flex-col items-center justify-center p-4">
+                        <h1 className="text-4xl font-bold text-blue-800 mb-8 japanese-font">開運！ささがね記憶試練</h1>
+                        
+                        <div className="bg-white rounded-lg shadow-lg p-8 max-w-lg w-full">
+                            <div className="text-center mb-6">
+                                <h2 className="text-2xl font-bold text-blue-600 mb-2 japanese-font">
+                                    順序通りにタップせよ
+                                </h2>
+                                <p className="text-sm text-gray-500">
+                                    進捗: {currentStep + 1}/10 | 失敗回数: {failures}
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-5 gap-3 mb-6">
+                                {ninjaCharacters.map((ninja, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => handleNinjaClick(index)}
+                                        className={`w-16 h-16 rounded-lg border-2 border-gray-300 flex flex-col items-center justify-center ninja-button ${ninja.color} hover:border-gray-800`}
+                                    >
+                                        <div className="text-lg">{ninja.emoji}</div>
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div className="text-center">
+                                <p className="text-sm text-gray-600 japanese-font">
+                                    {ninjaCharacters[sequence[currentStep]].name} をタップせよ
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (gameState === 'result') {
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-purple-100 flex flex-col items-center justify-center p-4">
+                        <h1 className="text-4xl font-bold text-blue-800 mb-8 japanese-font">開運！ささがね記憶試練</h1>
+                        
+                        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+                            <div className="text-6xl mb-6">
+                                {success ? '🎉' : '😢'}
+                            </div>
+                            
+                            <h2 className="text-2xl font-bold mb-4 japanese-font">
+                                {success ? 'ゲーム制覇！' : '失敗せり...'}
+                            </h2>
+                            
+                            <p className="text-lg mb-4 japanese-font">
+                                {success 
+                                    ? '全ての順序を正確に再現できたり！' 
+                                    : `間違えたり。正解は${ninjaCharacters[sequence[currentStep]].name}であった。`
+                                }
+                            </p>
+
+                            {!success && (
+                                <div className="mb-6">
+                                    <p className="text-lg text-red-600 font-bold japanese-font">
+                                        失敗回数: {failures}
+                                    </p>
+                                </div>
+                            )}
+
+                            <button
+                                onClick={resetGame}
+                                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg japanese-font"
+                            >
+                                {success ? '新たなる試練' : '再び挑戦せん'}
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            return null;
+        }
+
+        ReactDOM.render(<SasaganeMemoryGame />, document.getElementById('app'));
+    </script>
+</body>
+</html>

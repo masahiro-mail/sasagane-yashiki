@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>開運！ささがね神経衰弱</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700&family=Zen+Old+Mincho:wght@400;600;700&display=swap');
+        .japanese-font {
+            font-family: 'Shippori Mincho', 'Zen Old Mincho', serif;
+        }
+    </style>
+</head>
+<body class="japanese-font">
+    <div id="app"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // キャラクター画像のパス（8種類でペアを作る）
+        const cardValues = [
+            'cryptoNinjaImage/sasagane.png',
+            'cryptoNinjaImage/sakuya.png', 
+            'cryptoNinjaImage/benten.png',
+            'cryptoNinjaImage/izuna.png',
+            'cryptoNinjaImage/kohaku.png',
+            'cryptoNinjaImage/konga.png',
+            'cryptoNinjaImage/nemu.png',
+            'cryptoNinjaImage/seori.png'
+        ];
+
+        function CardMatching() {
+            const [gameState, setGameState] = useState('waiting');
+            const [cards, setCards] = useState([]);
+            const [flippedCards, setFlippedCards] = useState([]);
+            const [mistakes, setMistakes] = useState(0);
+            const [matches, setMatches] = useState(0);
+
+            const initializeCards = () => {
+                const duplicatedValues = [...cardValues, ...cardValues];
+                const shuffledCards = duplicatedValues
+                    .sort(() => Math.random() - 0.5)
+                    .map((value, index) => ({
+                        id: index,
+                        value,
+                        isFlipped: false,
+                        isMatched: false,
+                    }));
+                setCards(shuffledCards);
+            };
+
+            const startGame = () => {
+                setGameState('playing');
+                setMistakes(0);
+                setMatches(0);
+                setFlippedCards([]);
+                initializeCards();
+            };
+
+            const handleCardClick = (clickedCard) => {
+                if (gameState !== 'playing' || 
+                    clickedCard.isFlipped || 
+                    clickedCard.isMatched || 
+                    flippedCards.length >= 2) {
+                    return;
+                }
+
+                const newCard = { ...clickedCard, isFlipped: true };
+                const newCards = cards.map(card => 
+                    card.id === clickedCard.id ? newCard : card
+                );
+                setCards(newCards);
+
+                const newFlippedCards = [...flippedCards, newCard];
+                setFlippedCards(newFlippedCards);
+
+                if (newFlippedCards.length === 2) {
+                    setTimeout(() => {
+                        checkMatch(newFlippedCards);
+                    }, 1000);
+                }
+            };
+
+            const checkMatch = (flippedCards) => {
+                const [card1, card2] = flippedCards;
+                
+                if (card1.value === card2.value) {
+                    // Match found
+                    setCards(prev => prev.map(card => 
+                        card.id === card1.id || card.id === card2.id 
+                            ? { ...card, isMatched: true }
+                            : card
+                    ));
+                    
+                    const newMatches = matches + 1;
+                    setMatches(newMatches);
+                    
+                    if (newMatches === 8) {
+                        setTimeout(() => setGameState('result'), 500);
+                    }
+                } else {
+                    // No match
+                    setCards(prev => prev.map(card => 
+                        card.id === card1.id || card.id === card2.id 
+                            ? { ...card, isFlipped: false }
+                            : card
+                    ));
+                    
+                    const newMistakes = mistakes + 1;
+                    setMistakes(newMistakes);
+                }
+                
+                setFlippedCards([]);
+            };
+
+            const resetGame = () => {
+                setGameState('waiting');
+                setCards([]);
+                setFlippedCards([]);
+                setMistakes(0);
+                setMatches(0);
+            };
+
+            if (gameState === 'waiting') {
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-purple-100 to-pink-100 flex flex-col items-center justify-center p-4">
+                        <h1 className="text-4xl font-bold text-purple-800 mb-8">開運！ささがね神経衰弱</h1>
+                        
+                        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full mb-8 text-center">
+                            <div className="text-6xl mb-6">🃏</div>
+                            <p className="text-lg font-bold text-purple-600 mb-6">記憶力チャレンジ</p>
+                            <p className="text-sm text-gray-600 mb-6">
+                                同じ絵柄のカードを2枚ペアにしてください！<br />
+                                全8ペア完成でゲームクリア<br />
+                                時間制限・回数制限なし
+                            </p>
+                        </div>
+                        
+                        <button
+                            onClick={startGame}
+                            className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-4 px-8 rounded-lg text-xl"
+                        >
+                            ゲームを始める
+                        </button>
+                    </div>
+                );
+            }
+
+            if (gameState === 'playing') {
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-purple-100 to-pink-100 flex flex-col items-center justify-center p-4">
+                        <h1 className="text-4xl font-bold text-purple-800 mb-8">開運！ささがね神経衰弱</h1>
+                        
+                        <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full">
+                            <div className="flex justify-between items-center mb-6">
+                                <div className="text-lg font-bold text-gray-700">
+                                    ペア: {matches}/8
+                                </div>
+                                <div className="text-lg font-bold text-gray-700">
+                                    ミス: {mistakes}
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-4 gap-3 mb-6">
+                                {cards.map((card) => (
+                                    <button
+                                        key={card.id}
+                                        onClick={() => handleCardClick(card)}
+                                        disabled={card.isFlipped || card.isMatched || flippedCards.length >= 2}
+                                        className={`w-20 h-20 rounded-lg border-2 flex items-center justify-center text-2xl font-bold transition-all duration-300 overflow-hidden ${
+                                            card.isMatched
+                                                ? 'bg-green-200 border-green-400 text-green-800'
+                                                : card.isFlipped
+                                                ? 'bg-white border-purple-400'
+                                                : 'bg-purple-200 border-purple-300 hover:bg-purple-300'
+                                        }`}
+                                    >
+                                        {card.isFlipped || card.isMatched ? (
+                                            <img 
+                                                src={card.value} 
+                                                alt="キャラクター" 
+                                                className="w-full h-full object-cover rounded"
+                                            />
+                                        ) : (
+                                            '?'
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div className="text-center text-sm text-gray-600">
+                                カードをタップして絵柄を確認しよう！
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (gameState === 'result') {
+                const isWin = matches === 8;
+                
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-purple-100 to-pink-100 flex flex-col items-center justify-center p-4">
+                        <h1 className="text-4xl font-bold text-purple-800 mb-8">開運！ささがね神経衰弱</h1>
+                        
+                        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+                            <div className="text-6xl mb-6">
+                                {isWin ? '🎉' : '😅'}
+                            </div>
+                            
+                            <h2 className="text-2xl font-bold mb-4">
+                                {isWin ? 'ゲームクリア！' : 'ゲームオーバー'}
+                            </h2>
+                            
+                            <p className="text-lg mb-4">
+                                ペア数: {matches}/8
+                            </p>
+
+                            <div className="mb-6">
+                                <p className="text-sm text-gray-600">
+                                    {isWin 
+                                        ? '素晴らしい記憶力です！' 
+                                        : `${mistakes}回ミスしました`
+                                    }
+                                </p>
+                            </div>
+
+                            <button
+                                onClick={resetGame}
+                                className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-lg"
+                            >
+                                もう一度挑戦
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            return null;
+        }
+
+        ReactDOM.render(<CardMatching />, document.getElementById('app'));
+    </script>
+</body>
+</html>
