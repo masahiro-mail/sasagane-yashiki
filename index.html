@@ -1332,11 +1332,24 @@
                 max-width: 100%;
             }
 
+            /* スマホ専用LPタイトル */
+            .mobile-lp-title {
+                display: block;
+                font-size: 1.8rem;
+                color: var(--enchanted-pink);
+                text-shadow: 0 0 15px var(--glow-pink);
+                margin-bottom: 1.5rem;
+                margin-top: 1rem;
+                font-family: 'Zen Old Mincho', serif;
+                font-weight: 600;
+                letter-spacing: 2px;
+            }
+
             .hero-title {
                 font-size: 2.8rem;
                 letter-spacing: 1px;
                 margin-bottom: 1rem;
-                margin-top: 2rem;
+                margin-top: 1rem;
             }
 
             .hero-subtitle {
@@ -1517,6 +1530,11 @@
             }
         }
 
+        /* デスクトップではモバイルタイトルを非表示 */
+        .mobile-lp-title {
+            display: none;
+        }
+
         /* スクロールアニメーション用のユーティリティ */
         .fade-in {
             opacity: 0;
@@ -1568,6 +1586,7 @@
     <section class="hero">
         <div class="hero-content">
             <div class="hero-text">
+                <div class="mobile-lp-title">ささがね屋敷</div>
                 <h1 class="hero-title">ささがね</h1>
                 <p class="hero-subtitle">待ち人の前兆を告げる蜘蛛の妖艶忍者</p>
                 <p class="hero-description">
