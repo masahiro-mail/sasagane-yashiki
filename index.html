@@ -322,14 +322,14 @@
         /* 超リアル3D蜘蛛キャラクター */
         .spider-char {
             position: fixed;
-            width: 60px;
-            height: 60px;
-            font-size: 48px;
+            width: 15px;
+            height: 15px;
+            font-size: 12px;
             pointer-events: none;
             z-index: 3;
-            filter: drop-shadow(0 0 15px var(--glow-pink))
-                    drop-shadow(0 0 30px var(--glow-violet))
-                    drop-shadow(0 0 45px rgba(212, 70, 239, 0.6));
+            filter: drop-shadow(0 0 4px var(--glow-pink))
+                    drop-shadow(0 0 8px var(--glow-violet))
+                    drop-shadow(0 0 12px rgba(212, 70, 239, 0.6));
             animation: spiderWalk3D linear infinite;
         }
 
@@ -1306,21 +1306,30 @@
             }
 
             /* ナビゲーション */
+            .header {
+                background: rgba(10, 10, 10, 0.95) !important;
+                backdrop-filter: blur(20px) !important;
+                border-bottom: 1px solid rgba(212, 70, 239, 0.3);
+            }
+
             .nav-container {
                 flex-direction: column;
                 gap: 1rem;
-                padding: 1rem;
+                padding: 1.5rem 1rem;
             }
 
             .logo {
-                font-size: 1.8rem;
+                font-size: 1.6rem;
+                color: var(--enchanted-pink);
+                text-shadow: 0 0 10px var(--glow-pink);
             }
 
             .nav-links {
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: 0.5rem;
+                gap: 0.8rem;
+                margin-top: 0.5rem;
             }
 
             .nav-links li {
@@ -1328,8 +1337,18 @@
             }
 
             .nav-links a {
-                padding: 0.5rem 1rem;
+                padding: 0.8rem 1.2rem;
                 font-size: 0.9rem;
+                background: rgba(212, 70, 239, 0.1);
+                border: 1px solid rgba(212, 70, 239, 0.3);
+                border-radius: 15px;
+                backdrop-filter: blur(10px);
+                transition: all 0.3s ease;
+            }
+
+            .nav-links a:hover {
+                background: rgba(212, 70, 239, 0.2);
+                box-shadow: 0 0 15px rgba(212, 70, 239, 0.4);
             }
 
             /* ヒーローセクション */
@@ -1748,8 +1767,8 @@
                             <div class="stat-label">ニンジャDAO歴</div>
                         </div>
                         <div class="stat-item" style="background: rgba(212, 70, 239, 0.1); border: 2px solid var(--enchanted-pink); border-radius: 15px; padding: 1.5rem; box-shadow: 0 0 20px var(--glow-pink);">
-                            <div class="stat-value" style="font-size: 1.2rem; font-weight: bold; color: var(--enchanted-pink);">コミュニティリーダー<br>兼 毎日遊ぼう部屋 室長</div>
-                            <div class="stat-label">FiNANCiEオロチトークン</div>
+                            <div class="stat-value" style="font-size: 1.2rem; font-weight: bold; color: var(--enchanted-pink);">コミュニティリーダー</div>
+                            <div class="stat-label">オロチトークン</div>
                         </div>
                     </div>
                 </div>
@@ -2058,8 +2077,8 @@
             spider.style.animationDuration = (baseDuration + Math.random() * 5) + 's';
             spider.style.animationDelay = Math.random() * 2 + 's';
             
-            // ランダムなサイズ
-            const sizes = [0.8, 1, 1.2, 1.4];
+            // ランダムなサイズ（1/4に縮小）
+            const sizes = [0.2, 0.25, 0.3, 0.35];
             const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
             spider.style.transform = `scale(${randomSize})`;
             
