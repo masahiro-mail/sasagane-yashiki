@@ -1299,6 +1299,12 @@
                 cursor: auto;
                 font-size: 14px;
             }
+
+            /* 背景の重い常時アニメーションは無効化 */
+            .mystic-fog,
+            .light-ray {
+                display: none !important;
+            }
             
             .mystic-cursor,
             .cursor-trail {
@@ -1868,7 +1874,7 @@
     <footer class="footer">
         <div class="footer-content">
             <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 3rem; flex-wrap: wrap;">
-                <a href="https://ninjadao.ninja/" target="_blank" 
+                <a href="https://www.ninja-dao.com/" target="_blank" 
                    style="display: inline-block; background: rgba(212, 70, 239, 0.1); color: var(--enchanted-pink); 
                           padding: 1rem 1.5rem; border-radius: 15px; text-decoration: none; font-weight: bold; 
                           backdrop-filter: blur(10px); border: 1px solid rgba(212, 70, 239, 0.2); 
@@ -2180,13 +2186,38 @@
             }
         }
 
-        // エフェクト生成間隔を調整（超リッチに）
-        setInterval(createSakuraPetals, 1500);    // 1.5秒間隔
-        setInterval(createSpiderWeb, 5000);       // 5秒間隔  
-        setInterval(createSpiderCharacter, 6000); // 6秒間隔
-        setInterval(createMagicCircle, 15000);    // 15秒間隔
-        setInterval(createEnergyWave, 8000);      // 8秒間隔
-        setInterval(createStarDust, 4000);        // 4秒間隔
+        // グローバル端末判定（使用箇所で一貫利用）
+        const isMobile = (window.innerWidth <= 768) || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        // エフェクト生成間隔を調整（超リッチに／超軽量）
+        // モバイルはさらに軽量化（最低限の演出のみ）
+        const animationIntervals = isMobile ? {
+            sakura: 15000,   // 15秒間隔（さらに軽量）
+            web: 0,          // 無効化
+            spider: 0,       // 無効化
+            magic: 0,        // 無効化
+            energy: 0,       // 無効化
+            star: 0          // 無効化
+        } : {
+            sakura: 1500,    // 1.5秒間隔（通常）
+            web: 5000,       // 5秒間隔
+            spider: 6000,    // 6秒間隔
+            magic: 15000,    // 15秒間隔
+            energy: 8000,    // 8秒間隔
+            star: 4000       // 4秒間隔
+        };
+
+        // モバイルは必要最低限のみ生成（連続生成によるDOM肥大を回避）
+        if (animationIntervals.sakura > 0) {
+            setInterval(createSakuraPetals, animationIntervals.sakura);
+        }
+        if (!isMobile) {
+            setInterval(createSpiderWeb, animationIntervals.web);
+            setInterval(createSpiderCharacter, animationIntervals.spider);
+            setInterval(createMagicCircle, animationIntervals.magic);
+            setInterval(createEnergyWave, animationIntervals.energy);
+            setInterval(createStarDust, animationIntervals.star);
+        }
 
         // Three.js 神秘的な背景
         let scene, camera, renderer, particleSystem;
@@ -2196,17 +2227,18 @@
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             renderer = new THREE.WebGLRenderer({ 
                 alpha: true, 
-                antialias: true,
-                powerPreference: "high-performance"
+                antialias: !isMobile, // モバイルではアンチエイリアス無効
+                powerPreference: isMobile ? "low-power" : "high-performance" // モバイルは低消費電力モード
             });
             
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2)); // モバイルは1倍
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setClearColor(0x000000, 0);
             document.getElementById('mystic-bg').appendChild(renderer.domElement);
 
             // 超絶パーティクルシステム
-            const particleCount = 2000; // 800 → 2000に増加
+            // 端末別パーティクル数（モバイルはさらに軽量）
+            const particleCount = isMobile ? 30 : 800; // モバイル：30、PC：800
             const geometry = new THREE.BufferGeometry();
             const positions = new Float32Array(particleCount * 3);
             const colors = new Float32Array(particleCount * 3);
@@ -2281,8 +2313,19 @@
             camera.position.z = 60;
         }
 
-        function animateMysticBackground() {
+        // モバイル向けFPS制限（モバイルは描画自体を停止するため実質PC用）
+        let lastFrameTime = 0;
+        const targetFPS = isMobile ? 30 : 60; 
+        const frameInterval = 1000 / targetFPS;
+
+        function animateMysticBackground(currentTime = 0) {
             requestAnimationFrame(animateMysticBackground);
+            
+            // FPS制限
+            if (currentTime - lastFrameTime < frameInterval) {
+                return;
+            }
+            lastFrameTime = currentTime;
 
             const time = Date.now() * 0.001;
             const slowTime = time * 0.3;
@@ -2353,7 +2396,9 @@
             particleSystem.rotation.x += (targetRotationX - particleSystem.rotation.x) * 0.05;
             particleSystem.rotation.y += (targetRotationY - particleSystem.rotation.y) * 0.05;
 
-            renderer.render(scene, camera);
+            if (renderer && camera) {
+                renderer.render(scene, camera);
+            }
         }
 
         // スクロールアニメーション
@@ -2380,13 +2425,21 @@
         function initHeaderEffects() {
             const header = document.getElementById('header');
             
+            // スクロールイベントにthrottling追加（モバイル軽量化）
+            let scrollThrottled = false;
             window.addEventListener('scroll', () => {
-                if (window.scrollY > 100) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
+                if (!scrollThrottled) {
+                    requestAnimationFrame(() => {
+                        if (window.scrollY > 100) {
+                            header.classList.add('scrolled');
+                        } else {
+                            header.classList.remove('scrolled');
+                        }
+                        scrollThrottled = false;
+                    });
+                    scrollThrottled = true;
                 }
-            });
+            }, { passive: true }); // passive追加で性能向上
         }
 
         // スムーススクロール
@@ -2407,6 +2460,7 @@
 
         // ウィンドウリサイズ対応
         function onWindowResize() {
+            if (!renderer || !camera) return;
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -2422,9 +2476,11 @@
 
         // 初期化
         document.addEventListener('DOMContentLoaded', () => {
-            // Three.js背景初期化
-            initMysticBackground();
-            animateMysticBackground();
+            // Three.js背景（モバイルは完全停止）
+            if (!isMobile) {
+                initMysticBackground();
+                animateMysticBackground();
+            }
 
             // アニメーション初期化
             initScrollAnimations();
@@ -2432,22 +2488,27 @@
             initSmoothScrolling();
             animateGallery();
 
-            // 蜘蛛の糸エフェクト初期化
-            createSpiderWeb();
-            createSpiderCharacter();
+            // 蜘蛛の糸エフェクト初期化（PCのみ）
+            if (!isMobile) {
+                createSpiderWeb();
+                createSpiderCharacter();
+            }
             
-            // 特殊エフェクト初期化
-            createMagicCircle();
-            createEnergyWave();
-            createStarDust();
+            // 特殊エフェクト初期化（PCのみ）
+            if (!isMobile) {
+                createMagicCircle();
+                createEnergyWave();
+                createStarDust();
+            }
 
             // ウィンドウリサイズリスナー
             window.addEventListener('resize', onWindowResize);
         });
 
         // モバイル最適化
-        if (window.innerWidth <= 768) {
-            document.getElementById('mystic-bg').style.display = 'none';
+        if (isMobile) {
+            const bg = document.getElementById('mystic-bg');
+            if (bg) bg.style.display = 'none';
         }
     </script>
 </body>
