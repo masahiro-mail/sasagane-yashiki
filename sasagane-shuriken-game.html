@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ニンジャ手裏剣ゲーム</title>
+  <meta name="description" content="タップ/クリックで手裏剣を放ち、標的を倒してスコアを競うライトウェイトなミニゲーム。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@600;700;900&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0b0b12;
+      --ink: #f8fafc;
+      --accent: #d946ef;
+      --accent2: #f43f5e;
+      --gold: #fbbf24;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 800px at 50% 30%, rgba(212,70,239,0.12), transparent 60%),
+                  linear-gradient(180deg, #100818, #0b0b12 40%);
+      color: var(--ink);
+      font-family: 'Shippori Mincho', 'Zen Old Mincho', serif;
+      overflow: hidden;
+    }
+    .topbar {
+      position: fixed; inset: 0 0 auto 0; height: 56px; display: flex; align-items: center; gap: 16px;
+      padding: 0 16px; background: rgba(0,0,0,0.35); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(212,70,239,0.25);
+      z-index: 10;
+    }
+    .title { font-weight: 700; letter-spacing: .08em; }
+    .pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border:1px solid rgba(255,255,255,0.25); border-radius: 999px; font-size: 12px; }
+    .accent { border-color: rgba(212,70,239,0.6); color: var(--accent); }
+    .gold { border-color: rgba(251,191,36,0.6); color: var(--gold); }
+    .canvas-wrap { position: absolute; inset: 56px 0 0 0; }
+    canvas { width: 100%; height: 100%; display: block; }
+    .overlay { position: absolute; inset: 56px 0 0 0; display: grid; place-items: center; pointer-events: none; }
+    .panel { pointer-events: auto; text-align: center; padding: 24px 20px; background: rgba(0,0,0,0.55); border:1px solid rgba(212,70,239,0.35); border-radius: 16px; max-width: 480px; margin: 0 16px; }
+    .panel h1 { margin: 0 0 8px; font-family: 'Zen Old Mincho', serif; font-weight: 900; }
+    .panel p { margin: 6px 0; opacity: .9; }
+    .btn { display: inline-block; padding: 12px 20px; border-radius: 999px; color: var(--ink); text-decoration: none; border: 2px solid var(--accent); }
+    .btn:hover { background: linear-gradient(45deg, var(--accent), var(--accent2)); border-color: transparent; }
+    .hint { font-size: 12px; opacity: .7; margin-top: 6px; }
+  </style>
+  <script>
+    // 軽量Canvasゲーム（モバイル優先設計）
+    window.addEventListener('DOMContentLoaded', () => {
+      const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+      const canvas = document.getElementById('g');
+      const ctx = canvas.getContext('2d', { alpha: false });
+      let W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+
+      function resize() {
+        W = canvas.clientWidth | 0; H = canvas.clientHeight | 0;
+        canvas.width = (W * dpr) | 0; canvas.height = (H * dpr) | 0;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      const ro = new ResizeObserver(resize); ro.observe(canvas);
+
+      // ゲーム状態
+      let state = 'ready'; // ready | playing | ended
+      let score = 0; let timeLeft = 30; // 秒
+      let lastTick = 0; let acc = 0; // タイマー用
+      let targets = [];
+      let throws = []; // 手裏剣アニメ
+      const maxTargets = isMobile ? 5 : 8;
+      const shurikenSpeed = isMobile ? 900 : 1100; // px/s
+      const targetSpeed = isMobile ? 36 : 48; // px/s（ゆっくり）
+      const targetRadius = 18;
+
+      function spawnTarget() {
+        if (targets.length >= maxTargets) return;
+        const side = Math.random() < 0.5 ? 'left' : 'right';
+        const y = 80 + Math.random() * Math.max(120, H - 200);
+        const x = side === 'left' ? -30 : W + 30;
+        const vx = side === 'left' ? (targetSpeed + Math.random()*12) : -(targetSpeed + Math.random()*12);
+        targets.push({ x, y, vx, r: targetRadius });
+      }
+
+      function start() {
+        score = 0; timeLeft = 30; state = 'playing';
+        lastTick = performance.now(); acc = 0; targets = []; throws = [];
+        for (let i=0;i<maxTargets-2;i++) spawnTarget();
+        document.getElementById('panel').style.display = 'none';
+      }
+
+      function end() {
+        state = 'ended';
+        const panel = document.getElementById('panel');
+        panel.style.display = 'block';
+        panel.querySelector('h1').textContent = '試合終了';
+        panel.querySelector('.desc').innerHTML = `スコア: <b>${score}</b> 点`;
+        panel.querySelector('.btn').textContent = 'もう一度';
+      }
+
+      function tap(e) {
+        if (state !== 'playing') return;
+        const rect = canvas.getBoundingClientRect();
+        const tx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+        const ty = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+        // 手裏剣を下中央から放つ
+        const sx = W*0.5, sy = H - 10;
+        const dx = tx - sx, dy = ty - sy; const len = Math.hypot(dx, dy) || 1;
+        const vx = (dx/len) * shurikenSpeed; const vy = (dy/len) * shurikenSpeed;
+        throws.push({ x: sx, y: sy, vx, vy, life: 0.6 });
+      }
+
+      canvas.addEventListener('click', tap, { passive: true });
+      canvas.addEventListener('touchstart', tap, { passive: true });
+
+      function update(dt) {
+        // タイマー
+        acc += dt; while (acc >= 1) { acc -= 1; timeLeft -= 1; if (timeLeft <= 0) { end(); break; } }
+
+        // 標的更新
+        for (const t of targets) {
+          t.x += t.vx * dt;
+        }
+        // 画面外は再配置
+        targets = targets.filter(t => t.x > -60 && t.x < W + 60);
+        while (state==='playing' && targets.length < maxTargets) spawnTarget();
+
+        // 手裏剣更新
+        for (const s of throws) {
+          s.x += s.vx * dt; s.y += s.vy * dt; s.life -= dt;
+          // 当たり判定（最近傍ヒット）
+          for (let i=0;i<targets.length;i++) {
+            const t = targets[i];
+            const d = Math.hypot(t.x - s.x, t.y - s.y);
+            if (d <= t.r + 8) {
+              // ヒット
+              score += 1; targets.splice(i,1); s.life = Math.min(s.life, 0.15);
+              break;
+            }
+          }
+        }
+        throws = throws.filter(s => s.life > 0 && s.x>-40 && s.x<W+40 && s.y>-40 && s.y<H+40);
+      }
+
+      function draw() {
+        ctx.fillStyle = '#0b0b12';
+        ctx.fillRect(0,0,W,H);
+
+        // 装飾グリッド
+        ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1;
+        for (let x=0;x<W;x+=40) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+        for (let y=0;y<H;y+=40) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+        // スコア/タイム
+        ctx.fillStyle = '#f8fafc'; ctx.font = '600 16px \"Shippori Mincho\"';
+        ctx.fillText(`得点 ${score}`, 12, 24);
+        ctx.fillStyle = '#fbbf24'; ctx.fillText(`残り ${Math.max(0,timeLeft)} 秒`, 12, 46);
+
+        // 標的
+        for (const t of targets) {
+          const grad = ctx.createRadialGradient(t.x, t.y, 4, t.x, t.y, t.r);
+          grad.addColorStop(0, 'rgba(217,70,239,0.9)');
+          grad.addColorStop(1, 'rgba(217,70,239,0.2)');
+          ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(t.x, t.y, t.r, 0, Math.PI*2); ctx.fill();
+          ctx.strokeStyle = 'rgba(244,63,94,0.7)'; ctx.lineWidth = 2; ctx.stroke();
+        }
+
+        // 手裏剣（簡易）
+        for (const s of throws) {
+          ctx.save(); ctx.translate(s.x, s.y);
+          const a = (performance.now()/120) % (Math.PI*2); ctx.rotate(a);
+          ctx.strokeStyle = 'rgba(248,250,252,0.9)'; ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(0,-10); ctx.lineTo(0,10); ctx.moveTo(-10,0); ctx.lineTo(10,0);
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+
+      // ループ（モバイルは30FPS上限）
+      let last = performance.now();
+      const frame = isMobile ? (1000/30) : (1000/60);
+      let accFrame = 0;
+      function loop(now){
+        const dtRaw = (now - last) / 1000; last = now;
+        accFrame += dtRaw*1000;
+        if (accFrame >= frame) {
+          const dt = Math.min(accFrame/1000, 0.05); // 安定化
+          accFrame = 0;
+          if (state === 'playing') update(dt);
+          draw();
+        }
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+
+      // パネル設定
+      document.getElementById('start').addEventListener('click', start);
+      // 初回描画
+      resize(); draw();
+    });
+  </script>
+</head>
+<body>
+  <div class="topbar">
+    <div class="title">ニンジャ手裏剣ゲーム</div>
+    <div class="pill accent">🥷 手裏剣で的を討て</div>
+    <div class="pill gold">制限時間 30 秒</div>
+  </div>
+  <div class="canvas-wrap"><canvas id="g"></canvas></div>
+  <div class="overlay">
+    <div class="panel" id="panel">
+      <h1>ニンジャ手裏剣ゲーム</h1>
+      <p class="desc">画面をタップ/クリックして、的に向けて手裏剣を放て。<br>30秒で何点とれるか挑戦！</p>
+      <p class="hint">ヒント: 的は横にゆっくり動く。狙いを少し先に置こう。</p>
+      <a href="#" class="btn" id="start">開始する</a>
+    </div>
+  </div>
+</body>
+</html>
+
