@@ -585,3 +585,55 @@ Hero Section - ささがねの華麗な登場シーン
   - [更新] index.html
   - [削除] sasagane-shuriken-game.html
   - [更新] worklog.md
+
+---
+
+## ?? ��ƃ��O�����ǋL�i2025-10-04T14:38:52+09:00�j
+- [����] �t�H���_�\���Ǝ�v�t�@�C�����m�F
+- [�L�^] LP�̌���𕪐͂��ĕ�
+
+
+---
+
+## 📝 作業ログ自動追記（2025-10-04T14:44:27+09:00）
+- [更新] index.html（主人の間をツマ情報へ差し替え）
+- [更新] worklog.md
+
+
+---
+
+## 📝 作業ログ自動追記（2025-10-04T14:50:09+09:00）
+- [更新] index.html（主人の間のレイアウト・表現調整）
+- [検証] npx htmlhint index.html
+
+
+---
+
+## 📝 作業ログ自動追記（2025-10-04T14:59:49+09:00）
+- [更新] index.html（主人の間CTA削除／フッターリンク追加／年号修正／ゲームカード削除）
+- [検証] npx htmlhint index.html
+
+
+---
+
+## 📝 作業ログ自動追記（2025-10-04T15:06:15+09:00）
+- [更新] index.html（フッターボタン並び替え・文言調整）
+- [検証] npx htmlhint index.html
+
+
+---
+
+## 📝 作業ログ自動追記（2025-10-04T15:12:58+09:00）
+- [更新] index.html（フッターボタン整理／クレジットにリンク追加）
+- [検証] npx htmlhint index.html
+
+
+---
+
+## 📝 作業ログ自動追記（2025-10-04T15:17:11+09:00）
+- コミット: `11682c5`（ブランチ: master）
+- 作者: masahiro-mail <masahiro54.mail@gmail.com>
+- 件名: feat: refresh owner profile and footer links
+- 変更ファイル:
+  - [更新] index.html
+  - [更新] worklog.md

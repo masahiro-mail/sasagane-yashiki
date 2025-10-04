@@ -64,11 +64,12 @@
             line-height: 1.8;
             overflow-x: hidden;
             scroll-behavior: smooth;
-            cursor: none;
+            cursor: auto;
         }
 
         /* カスタム妖艶カーソル */
         .mystic-cursor {
+            display: none; /* 通常ポインタを使うため非表示 */
             position: fixed;
             width: 32px;
             height: 32px;
@@ -81,6 +82,7 @@
         }
 
         .cursor-trail {
+            display: none; /* 通常ポインタを使うため非表示 */
             position: fixed;
             width: 12px;
             height: 12px;
@@ -1070,6 +1072,14 @@
             gap: 2rem;
         }
 
+        /* 開発中メッセージ（ゲームカードの下に配置） */
+        .games-note {
+            text-align: center;
+            color: var(--silver-mist);
+            margin-top: 1.5rem;
+            opacity: 0.9;
+        }
+
         .game-card {
             background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(20px);
@@ -1715,13 +1725,6 @@
                     <p class="game-description">ささがねが披露する妖艶なる蜘蛛舞踊。リズムに合わせて妖しき技を競う舞踊遊戯なり。</p>
                     <a href="https://v0-spider-game-remake.vercel.app" class="game-link" target="_blank">遊戯を始める</a>
                 </div>
-                
-                <div class="game-card fade-in">
-                    <div class="game-icon">🕸️</div>
-                    <h3 class="game-title">ささがねのゲームを日々開発中</h3>
-                    <p class="game-description">新たなる神秘の遊戯を鋭意開発中。ささがねの奥深き世界をさらに楽しめる遊戯を準備しております。</p>
-                    <div class="game-link" style="background: rgba(255,255,255,0.2); cursor: default;">開発中...</div>
-                </div>
 
                 <!-- 追加: ささがねとの友情ゲーム（作者：こんさん） -->
                 <div class="game-card fade-in">
@@ -1737,68 +1740,71 @@
     <!-- オーナー紹介セクション -->
     <section class="section" id="owner">
         <div class="section-container">
-            <h2 class="section-title fade-in">主人の間（あくまで仮です）</h2>
-            <p class="section-subtitle">仮主人（図解師★ウルフ）について</p>
+            <h2 class="section-title fade-in">主人の間</h2>
+            <p class="section-subtitle">CryptoNinja#39『ささがね』オーナー ツマについて</p>
             
             <div class="character-grid">
                 <div class="character-info fade-in">
                     <div class="character-detail">
-                        <h3>🐺 図解師★ウルフ</h3>
-                        <p>SNSインフルエンサー＆VibeCoder。「AIであなたの空想を現実に！」をモットーに、ClaudeCodeを中心としたAI開発を行う創造者なり。図解作成、PodCast配信、アプリ開発にて多彩な活動を展開している。</p>
+                        <h3>🕸️ ツマとは</h3>
+                        <p>2021年11月にNinjaDAOへ加わったパーツクリエイター。2025年9月20日、CryptoNinja#39「ささがね」のオーナーに就任したアーティスト。</p>
                     </div>
                     <div class="character-detail">
-                        <h3>📊 主な活動内容</h3>
-                        <p>図解サイト「diagram-wolf.com」の運営、毎日配信のPodCast「ウルフチャンネル」、CNPトレカコミュニティでの本格的なアプリ開発など、AI技術を駆使した多方面での創作活動を行っている。</p>
+                        <h3>🧵 活動履歴</h3>
+                        <ul style="margin-left: 1.2rem; line-height: 1.7; list-style: disc;">
+                            <li>2021年11月 NinjaDAOに参加しパーツクリエイターとして活動開始</li>
+                            <li>CNP・ふるさとCNP・めたばっち・CNPBaby・CNPプリンス・Musubiギフト（V2）の各プロジェクトでパーツ制作を担当</li>
+                            <li>2023年9月 NinjaDAOヘッダーイラスト &amp; NinjaDAO3周年NFT（シャオラン）担当</li>
+                            <li>2024年12月 NinjaDAO SBTイラスト担当</li>
+                            <li>2025年9月20日 CryptoNinja#39「ささがね」オーナー就任</li>
+                        </ul>
                     </div>
                     <div class="character-detail">
-                        <h3>💡 開発実績</h3>
-                        <p>CNPトレカファンサイト、X認証付きイベントカレンダー、デッキビルダー、オンライン対戦アプリなど、Next.js・TypeScript・Three.jsを用いた高品質なWebアプリケーションを多数開発している。</p>
+                        <h3>🏅 受賞履歴</h3>
+                        <ul style="margin-left: 1.2rem; line-height: 1.7; list-style: disc;">
+                            <li>2022年 しきぶちゃんファンアートコンペ キャラDAO賞</li>
+                            <li>2023〜2024年 CoolGirl 冬コンペ 優秀賞</li>
+                        </ul>
+                    </div>
+                    <div class="character-detail">
+                        <h3>📣 X（旧Twitter）</h3>
+                        <p><a href="http://x.com/@tuma2112" target="_blank" rel="noopener" style="color: var(--enchanted-pink); text-decoration: underline;">@tuma2112</a></p>
                     </div>
                 </div>
                 
                 <div class="character-stats fade-in">
-                    <h3 style="text-align: center; margin-bottom: 3rem; color: var(--enchanted-pink); font-family: 'Zen Old Mincho', serif; font-size: 2.2rem; text-shadow: 0 0 20px var(--glow-pink);">屋敷主人の功績</h3>
-                    <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); gap: 2rem; max-width: 600px; margin: 0 auto;">
-                        <div class="stat-item" style="background: rgba(212, 70, 239, 0.1); border: 2px solid var(--enchanted-pink); border-radius: 15px; padding: 1.5rem; box-shadow: 0 0 20px var(--glow-pink);">
-                            <div class="stat-value" style="font-size: 1.8rem; font-weight: bold; color: var(--enchanted-pink);">約七年</div>
-                            <div class="stat-label">SNS活動歴</div>
+                    <h3 style="text-align: center; margin-bottom: 1rem; color: var(--enchanted-pink); font-family: 'Zen Old Mincho', serif; font-size: 2.4rem; text-shadow: 0 0 25px var(--glow-pink);">ツマの歩み ― 糸が導く物語</h3>
+                    <p style="text-align: center; color: var(--silver-mist); margin-bottom: 2.5rem; font-size: 1.1rem;">一本の糸から始まった創作は、仲間と祝祭を紡ぎ、今や「ささがね」の魂を宿す灯となった。</p>
+                    <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); gap: 2rem; max-width: 650px; margin: 0 auto;">
+                        <div class="stat-item" style="background: radial-gradient(circle at top, rgba(212, 70, 239, 0.25), rgba(10, 10, 10, 0.85)); border: 2px solid rgba(212, 70, 239, 0.6); border-radius: 18px; padding: 1.8rem; box-shadow: 0 0 25px rgba(212, 70, 239, 0.45);">
+                            <div class="stat-value" style="font-size: 1.7rem; font-weight: bold; color: var(--enchanted-pink);">始まりの糸</div>
+                            <div class="stat-label" style="font-size: 1rem; color: var(--ghostly-white);">2021年11月 NinjaDAO加入</div>
                         </div>
-                        <div class="stat-item" style="background: rgba(212, 70, 239, 0.1); border: 2px solid var(--enchanted-pink); border-radius: 15px; padding: 1.5rem; box-shadow: 0 0 20px var(--glow-pink);">
-                            <div class="stat-value" style="font-size: 1.8rem; font-weight: bold; color: var(--enchanted-pink);">六十記事以上</div>
-                            <div class="stat-label">図解ブログ</div>
+                        <div class="stat-item" style="background: radial-gradient(circle at top, rgba(212, 70, 239, 0.25), rgba(10, 10, 10, 0.85)); border: 2px solid rgba(212, 70, 239, 0.6); border-radius: 18px; padding: 1.8rem; box-shadow: 0 0 25px rgba(212, 70, 239, 0.45);">
+                            <div class="stat-value" style="font-size: 1.7rem; font-weight: bold; color: var(--enchanted-pink);">編み上げた世界</div>
+                            <div class="stat-label" style="font-size: 1rem; color: var(--ghostly-white);">6つの公式プロジェクトでパーツ制作</div>
                         </div>
-                        <div class="stat-item" style="background: rgba(212, 70, 239, 0.1); border: 2px solid var(--enchanted-pink); border-radius: 15px; padding: 1.5rem; box-shadow: 0 0 20px var(--glow-pink);">
-                            <div class="stat-value" style="font-size: 1.8rem; font-weight: bold; color: var(--enchanted-pink);">五百回超</div>
-                            <div class="stat-label">毎日音声配信</div>
+                        <div class="stat-item" style="background: radial-gradient(circle at top, rgba(212, 70, 239, 0.25), rgba(10, 10, 10, 0.85)); border: 2px solid rgba(212, 70, 239, 0.6); border-radius: 18px; padding: 1.8rem; box-shadow: 0 0 25px rgba(212, 70, 239, 0.45);">
+                            <div class="stat-value" style="font-size: 1.7rem; font-weight: bold; color: var(--enchanted-pink);">祝祭を彩る筆</div>
+                            <div class="stat-label" style="font-size: 1rem; color: var(--ghostly-white);">2023年 NinjaDAOヘッダー &amp; 3周年NFT</div>
                         </div>
-                        <div class="stat-item" style="background: rgba(212, 70, 239, 0.1); border: 2px solid var(--enchanted-pink); border-radius: 15px; padding: 1.5rem; box-shadow: 0 0 20px var(--glow-pink);">
-                            <div class="stat-value" style="font-size: 1.8rem; font-weight: bold; color: var(--enchanted-pink);">二十個以上</div>
-                            <div class="stat-label">開発アプリ</div>
+                        <div class="stat-item" style="background: radial-gradient(circle at top, rgba(212, 70, 239, 0.25), rgba(10, 10, 10, 0.85)); border: 2px solid rgba(212, 70, 239, 0.6); border-radius: 18px; padding: 1.8rem; box-shadow: 0 0 25px rgba(212, 70, 239, 0.45);">
+                            <div class="stat-value" style="font-size: 1.7rem; font-weight: bold; color: var(--enchanted-pink);">魂を刻む線</div>
+                            <div class="stat-label" style="font-size: 1rem; color: var(--ghostly-white);">2024年 NinjaDAO SBTイラスト担当</div>
                         </div>
-                        <div class="stat-item" style="background: rgba(212, 70, 239, 0.1); border: 2px solid var(--enchanted-pink); border-radius: 15px; padding: 1.5rem; box-shadow: 0 0 20px var(--glow-pink);">
-                            <div class="stat-value" style="font-size: 1.8rem; font-weight: bold; color: var(--enchanted-pink);">三年半</div>
-                            <div class="stat-label">ニンジャDAO歴</div>
+                        <div class="stat-item" style="background: radial-gradient(circle at top, rgba(212, 70, 239, 0.25), rgba(10, 10, 10, 0.85)); border: 2px solid rgba(212, 70, 239, 0.6); border-radius: 18px; padding: 1.8rem; box-shadow: 0 0 25px rgba(212, 70, 239, 0.45);">
+                            <div class="stat-value" style="font-size: 1.7rem; font-weight: bold; color: var(--enchanted-pink);">ささがねの主</div>
+                            <div class="stat-label" style="font-size: 1rem; color: var(--ghostly-white);">2025年9月20日 CryptoNinja#39「ささがね」オーナー</div>
                         </div>
-                        <div class="stat-item" style="background: rgba(212, 70, 239, 0.1); border: 2px solid var(--enchanted-pink); border-radius: 15px; padding: 1.5rem; box-shadow: 0 0 20px var(--glow-pink);">
-                            <div class="stat-value" style="font-size: 1.2rem; font-weight: bold; color: var(--enchanted-pink);">コミュニティリーダー</div>
-                            <div class="stat-label">オロチトークン</div>
+                        <div class="stat-item" style="background: radial-gradient(circle at top, rgba(212, 70, 239, 0.25), rgba(10, 10, 10, 0.85)); border: 2px solid rgba(212, 70, 239, 0.6); border-radius: 18px; padding: 1.8rem; box-shadow: 0 0 25px rgba(212, 70, 239, 0.45);">
+                            <div class="stat-value" style="font-size: 1.7rem; font-weight: bold; color: var(--enchanted-pink);">称賛の結晶</div>
+                            <div class="stat-label" style="font-size: 1rem; color: var(--ghostly-white);">キャラDAO賞 &amp; 優秀賞のダブル受賞</div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div style="text-align: center; margin-top: 4rem;">
-                <a href="https://wolf-portfolio-production.up.railway.app/" target="_blank" 
-                   style="display: inline-block; background: linear-gradient(135deg, rgba(212, 70, 239, 0.3), rgba(168, 85, 247, 0.3)); 
-                          color: var(--ghostly-white); padding: 2rem 4rem; border-radius: 30px; text-decoration: none; 
-                          font-weight: bold; font-size: 1.4rem; backdrop-filter: blur(15px); 
-                          border: 2px solid rgba(212, 70, 239, 0.4); transition: all 0.4s ease; 
-                          box-shadow: 0 0 30px rgba(212, 70, 239, 0.4), inset 0 0 20px rgba(255,255,255,0.1);"
-                   onmouseover="this.style.background='linear-gradient(135deg, rgba(212, 70, 239, 0.5), rgba(168, 85, 247, 0.5))'; this.style.transform='translateY(-5px)'; this.style.boxShadow='0 0 50px rgba(212, 70, 239, 0.6), inset 0 0 30px rgba(255,255,255,0.2)'"
-                   onmouseout="this.style.background='linear-gradient(135deg, rgba(212, 70, 239, 0.3), rgba(168, 85, 247, 0.3))'; this.style.transform='translateY(0)'; this.style.boxShadow='0 0 30px rgba(212, 70, 239, 0.4), inset 0 0 20px rgba(255,255,255,0.1)'">
-                   🐺 図解師★ウルフのPortfolioはコチラ
-                </a>
-            </div>
+
         </div>
     </section>
 
@@ -1900,6 +1906,15 @@
                    onmouseout="this.style.background='rgba(212, 70, 239, 0.1)'; this.style.boxShadow='0 0 15px rgba(212, 70, 239, 0.2)'">
                    💬 ニンジャDAO Discord
                 </a>
+                <a href="http://x.com/@tuma2112" target="_blank" rel="noopener"
+                   style="display: inline-block; background: rgba(212, 70, 239, 0.1); color: var(--enchanted-pink); 
+                          padding: 1rem 1.5rem; border-radius: 15px; text-decoration: none; font-weight: bold; 
+                          backdrop-filter: blur(10px); border: 1px solid rgba(212, 70, 239, 0.2); 
+                          transition: all 0.3s ease; box-shadow: 0 0 15px rgba(212, 70, 239, 0.2); font-size: 0.9rem;"
+                   onmouseover="this.style.background='rgba(212, 70, 239, 0.2)'; this.style.boxShadow='0 0 25px rgba(212, 70, 239, 0.4)'"
+                   onmouseout="this.style.background='rgba(212, 70, 239, 0.1)'; this.style.boxShadow='0 0 15px rgba(212, 70, 239, 0.2)'">
+                   🕸️ ツマ（@tuma2112）
+                </a>
             </div>
             <div class="social-links">
                 <a href="https://x.com/Diagram_Wolf" class="social-link" target="_blank">
@@ -1907,8 +1922,8 @@
                 </a>
             </div>
             <p class="footer-text">
-                © 令和七年 ささがね屋敷 - 蜘蛛の妖艶忍者が住まう神秘の館<br>
-                LP作成：図解師★ウルフ
+                © 二〇二五年 ささがね屋敷 - 蜘蛛の妖艶忍者が住まう神秘の館<br>
+                LP作成：<a href="https://x.com/Diagram_Wolf" target="_blank" rel="noopener" style="color: var(--enchanted-pink); text-decoration: underline;">図解師★ウルフ</a>
             </p>
         </div>
     </footer>
