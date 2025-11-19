@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -1241,6 +1241,35 @@
             transform: translateY(0);
         }
 
+        .gallery-item img {
+            cursor: zoom-in;
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .lightbox.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
+        }
+
         /* フッター */
         .footer {
             background: var(--shadow-black);
@@ -1814,75 +1843,63 @@
             <h2 class="section-title fade-in">宝物の間</h2>
             <p class="section-subtitle">屋敷に収められし美しき秘宝の数々（ささがねのファンアートを飾らせて頂く予定です）</p>
             
-            <div class="gallery-container">
-                <div class="gallery-item">
-                    <div class="gallery-placeholder">
-                        🕷️<br>
-                        <span style="font-size: 1rem;">（皆様のファンアートを掲載）</span>
-                    </div>
+                                    <div class="gallery-container">
+                <div class="gallery-item fade-in">
+                    <img src="fanarts/fanart1.jpg" alt="あけじまD様 ファンアート" style="width:100%; height:100%; object-fit: cover; cursor: zoom-in;">
                     <div class="gallery-caption">
-                        <h4>（皆様のファンアートを掲載）</h4>
-                        <p>蜘蛛の糸にて人々の縁を紡ぐ神秘的なる瞬間</p>
+                        <h4>あけじまD様</h4>
+                        <p><a href="https://x.com/akezima_d" target="_blank" rel="noopener" style="color: var(--enchanted-pink); text-decoration: underline;">@akezima_d</a></p>
                     </div>
                 </div>
-                
-                <div class="gallery-item">
-                    <div class="gallery-placeholder">
-                        🌙<br>
-                        <span style="font-size: 1rem;">（皆様のファンアートを掲載）</span>
-                    </div>
+                <div class="gallery-item fade-in">
+                    <img src="fanarts/fanart2.jpg" alt="こたえっくす様 ファンアート" style="width:100%; height:100%; object-fit: cover; cursor: zoom-in;">
                     <div class="gallery-caption">
-                        <h4>（皆様のファンアートを掲載）</h4>
-                        <p>満月の下にて未来を見通す神秘の能力</p>
+                        <h4>こたえっくす様</h4>
+                        <p><a href="https://x.com/cotaex417" target="_blank" rel="noopener" style="color: var(--enchanted-pink); text-decoration: underline;">@cotaex417</a></p>
                     </div>
                 </div>
-                
-                <div class="gallery-item">
-                    <div class="gallery-placeholder">
-                        🪷<br>
-                        <span style="font-size: 1rem;">（皆様のファンアートを掲載）</span>
-                    </div>
+                <div class="gallery-item fade-in">
+                    <img src="fanarts/fanart5.jpg" alt="まつり様 ファンアート" style="width:100%; height:100%; object-fit: cover; cursor: zoom-in;">
                     <div class="gallery-caption">
-                        <h4>（皆様のファンアートを掲載）</h4>
-                        <p>恋人たちの永遠の愛を祈る聖なる儀式</p>
+                        <h4>まつり様</h4>
+                        <p><a href="https://x.com/matsuri_72no" target="_blank" rel="noopener" style="color: var(--enchanted-pink); text-decoration: underline;">@matsuri_72no</a></p>
                     </div>
                 </div>
-                
-                <div class="gallery-item">
-                    <div class="gallery-placeholder">
-                        🕸️<br>
-                        <span style="font-size: 1rem;">（皆様のファンアートを掲載）</span>
-                    </div>
+                <div class="gallery-item fade-in">
+                    <img src="fanarts/fanart4.jpg" alt="ゆりこうふう様 ファンアート" style="width:100%; height:100%; object-fit: cover; cursor: zoom-in;">
                     <div class="gallery-caption">
-                        <h4>（皆様のファンアートを掲載）</h4>
-                        <p>朝露に輝く美しき蜘蛛の巣の芸術作品</p>
+                        <h4>ゆりこうふう様</h4>
+                        <p><a href="https://x.com/kohu2022" target="_blank" rel="noopener" style="color: var(--enchanted-pink); text-decoration: underline;">@kohu2022</a></p>
                     </div>
                 </div>
-                
-                <div class="gallery-item">
-                    <div class="gallery-placeholder">
-                        💫<br>
-                        <span style="font-size: 1rem;">（皆様のファンアートを掲載）</span>
-                    </div>
+                <div class="gallery-item fade-in">
+                    <img src="fanarts/fanart3.jpg" alt="らんびーー様 ファンアート" style="width:100%; height:100%; object-fit: cover; cursor: zoom-in;">
                     <div class="gallery-caption">
-                        <h4>（皆様のファンアートを掲載）</h4>
-                        <p>夜空の星を糸にて繋ぎ物語を紡ぐ幻想場面</p>
+                        <h4>らんびーー様</h4>
+                        <p><a href="https://x.com/Lam_B2312" target="_blank" rel="noopener" style="color: var(--enchanted-pink); text-decoration: underline;">@Lam_B2312</a></p>
                     </div>
                 </div>
-                
-                <div class="gallery-item">
-                    <div class="gallery-placeholder">
-                        🔮<br>
-                        <span style="font-size: 1rem;">（皆様のファンアートを掲載）</span>
-                    </div>
+                <div class="gallery-item fade-in">
+                    <img src="fanarts/fanart6.jpg" alt="アースキー様 ファンアート" style="width:100%; height:100%; object-fit: cover; cursor: zoom-in;">
                     <div class="gallery-caption">
-                        <h4>（皆様のファンアートを掲載）</h4>
-                        <p>古代より語り継がれし蜘蛛の神託の瞬間</p>
+                        <h4>アースキー様</h4>
+                        <p><a href="https://x.com/EarthGigantea" target="_blank" rel="noopener" style="color: var(--enchanted-pink); text-decoration: underline;">@EarthGigantea</a></p>
+                    </div>
+                </div>
+                <div class="gallery-item fade-in">
+                    <img src="fanarts/fanart7.jpg" alt="チャン嫁様 ファンアート" style="width:100%; height:100%; object-fit: cover; cursor: zoom-in;">
+                    <div class="gallery-caption">
+                        <h4>チャン嫁様</h4>
+                        <p><a href="https://x.com/kawaiichanyome" target="_blank" rel="noopener" style="color: var(--enchanted-pink); text-decoration: underline;">@kawaiichanyome</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <div class="lightbox" id="lightbox">
+        <img id="lightbox-img" alt="">
+    </div>
 
     <!-- フッター -->
     <footer class="footer">
@@ -2497,6 +2514,33 @@
             });
         }
 
+        function initLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            if (!lightbox || !lightboxImg) return;
+
+            const closeLightbox = () => {
+                lightbox.classList.remove('open');
+                lightboxImg.src = '';
+                lightboxImg.alt = '';
+            };
+
+            document.querySelectorAll('.gallery-item img').forEach(img => {
+                img.addEventListener('click', () => {
+                    lightboxImg.src = img.src;
+                    lightboxImg.alt = img.alt;
+                    lightbox.classList.add('open');
+                });
+            });
+
+            lightbox.addEventListener('click', closeLightbox);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && lightbox.classList.contains('open')) {
+                    closeLightbox();
+                }
+            });
+        }
+
         // 初期化
         document.addEventListener('DOMContentLoaded', () => {
             // Three.js背景（モバイルは完全停止）
@@ -2510,6 +2554,7 @@
             initHeaderEffects();
             initSmoothScrolling();
             animateGallery();
+            initLightbox();
 
             // 蜘蛛の糸エフェクト初期化（PCのみ）
             if (!isMobile) {
@@ -2536,3 +2581,5 @@
     </script>
 </body>
 </html>
+
+
