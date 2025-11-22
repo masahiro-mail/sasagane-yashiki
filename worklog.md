@@ -730,3 +730,28 @@ Hero Section - ã•ã•ãŒã­ã®è¯éº—ãªç™»å ´ã‚·ãƒ¼ãƒ³
 - å¤‰æ›´ãƒ•ã‚¡ã‚¤ãƒ«:
   - [æ›´æ–°] index.html
   - [æ›´æ–°] worklog.md
+
+---
+
+## ?? ì‹ÆƒƒO©“®’Ç‹LI2025-11-20T08:25:00+09:00
+- [İ’è] OGP/TwitterƒJ[ƒh‚Ì‰æ‘œ‚ğâ‘ÎURL‚ÉXVihttps://sasagane-yashiki.vercel.app/cryptoNinjaImage/sasagane.pngj
+- [”õl] index.html ‚Ì og:image / twitter:image ‚ğ·‚µ‘Ö‚¦
+
+
+---
+
+## ?? ì‹ÆƒƒO©“®’Ç‹LI2025-11-20T08:35:00+09:00
+- [C³] ƒXƒ}ƒz‚ÅìÒ–¼‚ªí•\¦‚³‚ê‚é‚æ‚¤ƒMƒƒƒ‰ƒŠ[‚ÌƒLƒƒƒvƒVƒ‡ƒ“•\¦‚ğƒ‚ƒoƒCƒ‹‚Åí•\¦‚É•ÏX
+- [’Ç‰Á] fanart8i‚©‚¶‚ã—l @kajyusun35300j‚ğ•ó•¨‚ÌŠÔ‚É’Ç‰Á
+
+
+---
+
+## ğŸ“ ä½œæ¥­ãƒ­ã‚°è‡ªå‹•è¿½è¨˜ï¼ˆ2025-11-22T13:08:51+09:00ï¼‰
+- ã‚³ãƒŸãƒƒãƒˆ: `f419d53`ï¼ˆãƒ–ãƒ©ãƒ³ãƒ: masterï¼‰
+- ä½œè€…: masahiro-mail <masahiro54.mail@gmail.com>
+- ä»¶å: feat: keep fanart captions visible on mobile and add fanart8
+- å¤‰æ›´ãƒ•ã‚¡ã‚¤ãƒ«:
+  - [è¿½åŠ ] fanarts/fanart8.jpg
+  - [æ›´æ–°] index.html
+  - [æ›´æ–°] worklog.md
