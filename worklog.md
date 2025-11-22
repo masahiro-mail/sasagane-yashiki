@@ -755,3 +755,19 @@ Hero Section - ã•ã•ãŒã­ã®è¯éº—ãªç™»å ´ã‚·ãƒ¼ãƒ³
   - [è¿½åŠ ] fanarts/fanart8.jpg
   - [æ›´æ–°] index.html
   - [æ›´æ–°] worklog.md
+
+---
+
+## ?? ì‹ÆƒƒO©“®’Ç‹LI2025-11-20T09:00:00+09:00
+- [C³] OGP/TwitterƒJ[ƒh‚Ìƒƒ^‚ğÄİ’èiƒ^ƒCƒgƒ‹/ƒfƒBƒXƒNƒŠƒvƒVƒ‡ƒ“/og:url‚ğ–¾¦A‰æ‘œ‚Ísasagane.pngj
+
+
+---
+
+## ğŸ“ ä½œæ¥­ãƒ­ã‚°è‡ªå‹•è¿½è¨˜ï¼ˆ2025-11-22T13:16:04+09:00ï¼‰
+- ã‚³ãƒŸãƒƒãƒˆ: `294a759`ï¼ˆãƒ–ãƒ©ãƒ³ãƒ: masterï¼‰
+- ä½œè€…: masahiro-mail <masahiro54.mail@gmail.com>
+- ä»¶å: fix: update og meta tags with sasagane image
+- å¤‰æ›´ãƒ•ã‚¡ã‚¤ãƒ«:
+  - [æ›´æ–°] index.html
+  - [æ›´æ–°] worklog.md
